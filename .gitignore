@@ -1,0 +1,6 @@
+node_modules
+server/db/**.json
+client/css/**.css
+ex
+.env
+package-lock.json
