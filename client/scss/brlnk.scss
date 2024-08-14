@@ -1,12 +1,4 @@
-$background: #eeeeed;
-$bg_1: #dddddc;
-$color: #1b1b1b;
-$blurple: #5865F2;
-$green: #57F287;
-$yellow: #FEE75C;
-$fuchsia: #EB459E;
-$red: #ED4245;
-
+@use "./variables" as v;
 * {
   margin: 0;
   padding: 0;
@@ -17,43 +9,31 @@ html {
 }
 body {
   width: 100%;
-  background-color: $background;
-  color: $color;
+  background-color: v.$background;
+  color: v.$color;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 button, input, textarea {
   border: none;
   outline: none;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 1rem;
+}
+textarea {
+  resize: none;
 }
 button, [role="button"] {
   cursor: pointer;
 }
 a {
-  color: $blurple;
+  color: v.$blurple;
 }
-.nav {
-  position: fixed;
-  top: 0;left: 0;
-  width: 100%;
-  height: 60px;
-  background-color: $blurple;
-  color: $background;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 5px;
-  .actions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    .btn {
-      font-size: 1.2rem;
-    }
-  }
+p {
+  line-height: 1.5;
 }
+
+@import "./properties/animations";
+
 .main {
   width: 100%;
   margin-top: 60px;
@@ -62,138 +42,21 @@ a {
   width: 100%;
   .content {
     padding: 10px;
+    animation: slide_right_in 0.25s;
   }
 }
-.sect._barang {
+.sect.out {
   .content {
-    .item {
-      background-color: $bg_1;
-      border: 1px solid $color;
-      border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      .col {
-        padding: 10px;
-      }
-      .col-1 {
-        width: calc(100% - 50px);
-        border-right: 1px solid $color;
-        .row-1 {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 10px;
-          .item-name {
-            font-weight: bold;
-          }
-          .item-price {
-            font-weight: bold;
-          }
-        }
-        .row-2 {
-          font-size: 0.8rem;
-          font-style: italic;
-        }
-      }
-      .col-2 {
-        width: 50px;
-        text-align: center;
-        align-content: center;
-        a {
-          display: block;
-          font-size: 1.2rem;
-        }
-      }
-    }
-    .item.btn-add-item {
-      display: block;
-      text-align: center;
-      background-color: $blurple;
-      color: $background;
-      padding: 10px;
-    }
-    .item:last-child {
-      margin-bottom: 0;
-    }
+    animation: slide_right_out 0.25s forwards;
   }
 }
-.modal {
-  position: fixed;
-  top: 0;left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #00000030;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  .box {
-    width: calc(100% - 40px);
-    max-width: 440px;
-    max-height: calc(100% - 40px);
-    overflow-y: auto;
-    background-color: $bg_1;
-    border: 1px solid $color;
-    border-radius: 20px;
-    padding: 20px;
-    .loading {
-      p {
-        text-align: center;
-        font-size: 2rem;
-      }
-    }
-    .icon {
-      text-align: center;
-      i {
-        line-height: 1.5;
-        font-size: 3rem;
-      }
-    }
-    .field {
-      width: 100%;
-      margin: 20px 0;
-      p.msg {
-        text-align: center;
-        line-height: 1.5;
-      }
-      input {
-        width: 100%;
-        padding: 10px;
-        border-radius: 10px;
-        background-color: #cccccc;
-        border-bottom: 1px solid $color;
-        border-left: 1px solid $color;
-      }
-    }
-    .actions, .action {
-      .btn {
-        width: calc(100% / 2);
-        border: 1px solid $color;
-        border-radius: 10px;
-        padding: 10px;
-        text-align: center;
-        align-content: center;
-      }
-      .btn:last-child {
-        background-color: $color;
-        color: $background;
-      }
-    }
-    .actions {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-    .action {
-      width: 100%;
-      .btn {
-        width: 100%;
-      }
-    }
-  }
+.center {
+  text-align: center;
 }
+
+@import "./properties/animations";
+@import "./properties/modal";
+@import "./properties/nav";
+@import "./divisions/biaya";
+@import "./divisions/barang";
+@import "./divisions/tambarang";

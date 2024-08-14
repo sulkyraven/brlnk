@@ -1,0 +1,87 @@
+@use "../variables" as v;
+
+.modal {
+  z-index: 100;
+  position: fixed;
+  top: 0;left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #00000030;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  .box {
+    width: calc(100% - 40px);
+    max-width: 440px;
+    max-height: calc(100% - 40px);
+    overflow-y: auto;
+    background-color: v.$bg_1;
+    border: 1px solid v.$color;
+    border-radius: 20px;
+    padding: 20px;
+    animation: popup_in 0.5s;
+    .loading {
+      p {
+        text-align: center;
+        font-size: 2rem;
+      }
+    }
+    .icon {
+      text-align: center;
+      i {
+        line-height: 1.5;
+        font-size: 3rem;
+      }
+    }
+    .field {
+      width: 100%;
+      margin: 20px 0;
+      p.msg {
+        text-align: center;
+        line-height: 1.5;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #cccccc;
+        border-bottom: 1px solid v.$color;
+        border-left: 1px solid v.$color;
+      }
+    }
+    .actions, .action {
+      .btn {
+        width: calc(100% / 2);
+        border: 1px solid v.$color;
+        border-radius: 10px;
+        padding: 10px;
+        text-align: center;
+        align-content: center;
+      }
+      .btn:last-child {
+        background-color: v.$color;
+        color: v.$background;
+      }
+    }
+    .actions {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .action {
+      width: 100%;
+      .btn {
+        width: 100%;
+      }
+    }
+  }
+}
+.modal.out {
+  .box {
+    animation: popup_out 0.5s forwards;
+  }
+}

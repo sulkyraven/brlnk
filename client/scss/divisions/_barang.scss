@@ -1,0 +1,84 @@
+@use "../variables" as v;
+
+.sect._barang {
+  .quicksearch {
+    background-color: v.$blurple;
+    padding: 10px;
+    width: 100%;
+    .field {
+      background-color: v.$background;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 5px;
+      input {
+        padding: 10px;
+        width: calc(100% - 25px);
+        background-color: #00000000;
+      }
+      .btn {
+        width: 20px;
+        margin-right: 5px;
+        font-size: 1.1rem;
+        color: v.$red;
+      }
+    }
+  }
+  .content {
+    .item {
+      background-color: v.$bg_1;
+      border: 1px solid v.$color;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      .col {
+        padding: 10px;
+      }
+      .col-1 {
+        width: calc(100% - 50px);
+        border-right: 1px solid v.$color;
+        .row-1 {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 10px;
+          .item-name {
+            font-weight: bold;
+          }
+          .item-price {
+            font-weight: bold;
+          }
+        }
+        .row-2 {
+          font-size: 0.8rem;
+          font-style: italic;
+        }
+      }
+      .col-2 {
+        width: 50px;
+        text-align: center;
+        align-content: center;
+        a {
+          display: block;
+          font-size: 1.2rem;
+        }
+      }
+    }
+    .item.btn-add-item {
+      display: block;
+      text-align: center;
+      background-color: v.$blurple;
+      color: v.$background;
+      padding: 10px;
+    }
+    .item:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .content-1 {
+    padding-bottom: 0;
+  }
+}
