@@ -2,7 +2,7 @@ const db = require("../db")
 
 module.exports = {
   getUser(user_id) {
-    return {code:200,msg:'ok',data:{...db.ref.users[user_id],id:user_id}};
+    return {code:200,msg:'ok',data:{email: db.ref.users[user_id].email,name: db.ref.users[user_id].name,id:user_id}}
   },
   getBarang() {
     const data = Object.keys(db.ref.barang).map(k => {return{...db.ref.barang[k],id:k}});

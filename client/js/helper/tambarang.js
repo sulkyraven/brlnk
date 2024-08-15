@@ -1,3 +1,4 @@
+import db from "./db.js";
 import { modal, waittime } from "./modal.js";
 import xhr from "./xhr.js";
 
@@ -38,12 +39,13 @@ export default class {
         <label for="item_price">Harga Barang:</label>
         <input type="text" name="item_price" id="item_price" autocomplete="off" maxlength="10" ${this.brg.price ? `value="${this.brg.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}"` : ''} required/>
       </div>
-      <div class="field">
-        <label for="item_desc">Keterangan (opsional):</label>
-        <textarea name="item_desc" id="item_desc" maxlength="500" ${this.brg.desc ? `value="${this.brg.desc}"` : ''}></textarea>
-      </div>
       <div class="br-t"></div>
-      ${this.type === 1 ? `<div class="field action">
+      ${this.type === 1 ? `
+      <div class="field">
+        <label for="item_desc">Riwayat Update:</label>
+        <div class="history" data-history="tambarang"></div>
+      </div>
+      <div class="field action">
         <div class="btn" role="button" data-delete="tambarang">hapus</div>
       </div>` : ''}
       <div class="field actions">
@@ -53,6 +55,18 @@ export default class {
         </button>
       </div>
     </form>`;
+    const echangelog = this.element.querySelector('[data-history]');
+    if(echangelog) {
+      let changes = db.barang[this.brg.id].last || [];
+      if(changes.length < 1) {
+        echangelog.innerHTML = `<p>Belum ada perubahan</p>`;
+      }
+      changes.forEach(ch => {
+        const p = document.createElement('p');
+        p.innerHTML = `${ch[0]}: Rp${ch[2].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} - ${new Date(ch[1]).toLocaleString()}`;
+        echangelog.prepend(p);
+      });
+    }
   }
   priceFormatter() {
     const input = this.element.querySelector('#item_price');

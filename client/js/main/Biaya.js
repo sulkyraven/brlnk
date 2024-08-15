@@ -38,20 +38,24 @@ export default class Biaya {
         <p>Nominal Transaksi:</p>
       </div>
       <div class="field">
-        <input type="text" name="tr-amount" id="tr-amount" autocomplete="off" placeholder="Ketik Nominal Transaksi"/>
+        <input type="number" name="tr-amount" id="tr-amount" autocomplete="off" placeholder="Ketik Nominal Transaksi"/>
       </div>
-      <div class="field">
-        <p>Biaya Transaksi:</p>
-      </div>
-      <div class="field">
-        <p> <i class="fa-solid fa-angles-right"></i> <b data-fee="biaya">Rp5.000</b></p>
+      <div class="field trans2">
+        <div class="card">
+          <p>Jumlah Transaksi</p>
+          <p><b data-amount="biaya">Rp0</b></p>
+        </div>
+        <div class="card">
+          <p>Biaya Transaksi</p>
+          <p><b data-fee="biaya">Rp5.000</b></p>
+        </div>
       </div>
     </div>`;
   }
   getFeePrint(input) {
-    let curNominal = Number(input.value.replace(/\D/g, ""));
-    input.value = curNominal.toString().replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    let tfee = biaya[this.type].find(k => curNominal >= k.tr);
+    let tfee = biaya[this.type].find(k => input.value >= k.tr);
+    const eamount = this.element.querySelector('[data-amount]');
+    eamount.innerHTML = 'Rp'+(input.value || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");;
     const efee = this.element.querySelector('[data-fee]');
     efee.innerHTML = 'Rp'+tfee.fee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
