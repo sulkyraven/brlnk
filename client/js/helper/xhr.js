@@ -8,13 +8,13 @@ export default {
       }
 
       resolve(await fetch(ref, fetchData).then(res => {
-        if(!res.ok) return {status: 500, msg: res.statusText || "Terjadi Kesalahan"}
+        if(!res.ok) return {code: 500, msg: res.statusText || "Terjadi Kesalahan"}
 
         return res.json();
       }).then(res => {
         return res;
       }).catch(err => {
-        return {status: 500, msg: "Terjadi kesalahan - E-500", data: err};
+        return {code: 500, msg: "Terjadi kesalahan - E-500", data: err};
       }));
     });
   },

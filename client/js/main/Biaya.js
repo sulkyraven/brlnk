@@ -3,7 +3,7 @@ import { waittime } from "../helper/modal.js";
 import nav from "./nav.js";
 const biaya = await fetch('./json/biaya.json').then(k=>k.json()).then(k=>k).catch(()=>{return{}});
 
-export default class {
+export default class Biaya {
   constructor() {
     this.name = 'biaya';
     this.type = 'tarik';
@@ -71,8 +71,6 @@ export default class {
         this.getFeePrint(input);
       };
     }
-
-
   }
   async destroy() {
     if(this.element) {

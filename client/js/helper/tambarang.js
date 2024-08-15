@@ -23,13 +23,13 @@ export default class {
       <div class="tr-types">
         <div class="tr-type">
           <label for="item_type_1">
-            <input type="radio" name="item_type" id="item_type_1" ${this.brg.type===0 ? 'checked': ''} required/>
+            <input type="radio" name="item_type" id="item_type_1" ${this.brg.type===0 ? 'checked': ''} value="0" required/>
             <p>Rokok</p>
           </label>
         </div>
         <div class="tr-type">
           <label for="item_type_2">
-            <input type="radio" name="item_type" id="item_type_2" ${this.brg.type===2 ? 'checked': ''} required/>
+            <input type="radio" name="item_type" id="item_type_2" ${this.brg.type===2 ? 'checked': ''} value="2" required/>
             <p>Lainnya</p>
           </label>
         </div>
@@ -43,7 +43,7 @@ export default class {
         <textarea name="item_desc" id="item_desc" maxlength="500" ${this.brg.desc ? `value="${this.brg.desc}"` : ''}></textarea>
       </div>
       <div class="br-t"></div>
-      ${this.type === 2 ? `<div class="field action">
+      ${this.type === 1 ? `<div class="field action">
         <div class="btn" role="button" data-delete="tambarang">hapus</div>
       </div>` : ''}
       <div class="field actions">
@@ -67,22 +67,59 @@ export default class {
       this.isLocked = true;
       this.destroy();
     }
+    const btnDelete = this.element.querySelector('[data-delete]');
+    if(btnDelete) btnDelete.onclick = async() => {
+      if(this.isLocked === true) return;
+      this.isLocked = true;
+
+      const isConfirm = await modal.confirm({
+        msg: `Yakin ingin menghapus data ${this.brg.name}?`,
+        ic: 'circle-question'
+      });
+      if(isConfirm !== true) {
+        this.isLocked = false;
+        return;
+      }
+
+      let data = {};
+      data.worktype = 2;
+      if(this.brg.id) data.workid = this.brg.id;
+      const delTam = await modal.loading(xhr.post('/uwu/work/barang', data));
+      if(!delTam || delTam.code !== 200) {
+        await modal.alert(delTam.msg || 'Terjadi Kesalahan');
+        this.isLocked = false;
+        return;
+      }
+      this.isLocked = false;
+      this.destroy();
+    }
     const form = this.element.querySelector('[data-tambarang]');
     form.onsubmit = async e => {
       e.preventDefault();
       if(this.isLocked === true) return;
       this.isLocked = true;
 
+      const isConfirm = await modal.confirm({
+        msg: 'Pastikan data barangnya udah bener.\nLanjutkan?',
+        okx: 'LANJUT',
+        cancelx: 'CEK LAGI'
+      });
+      if(isConfirm !== true) {
+        this.isLocked = false;
+        return;
+      }
+
       let data = {};
-      data.type = this.type;
+      data.worktype = this.type;
+      if(this.brg.id) data.workid = this.brg.id;
 
       const formData = new FormData(form);
       for(const [key,val] of formData) {
         data[key] = val;
       }
 
-      const postTam = await modal.loading(xhr.post('/uwu/tambarang', data));
-      if(!postTam || postTam.status !== 200) {
+      const postTam = await modal.loading(xhr.post('/uwu/work/barang', data));
+      if(!postTam || postTam.code !== 200) {
         await modal.alert(postTam?.msg || 'Terjadi Kesalahan');
         this.isLocked = false;
         return;

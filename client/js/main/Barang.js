@@ -4,7 +4,7 @@ import { waittime } from "../helper/modal.js";
 import tambarang from "../helper/tambarang.js";
 import nav from "./nav.js";
 
-export default class {
+export default class Barang {
   constructor({
     tyfilter = [0,1],
     name = 'barang'
@@ -60,7 +60,8 @@ export default class {
       </a>
     </div>`;
     const btnEdit = item.querySelector('.btn-edit');
-    btnEdit.onclick = () => {
+    btnEdit.onclick = (e) => {
+      e.preventDefault();
       if(this.searchopened) {
         this.esearch.remove();
         this.searchopened = false;
