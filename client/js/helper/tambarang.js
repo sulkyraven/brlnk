@@ -145,11 +145,13 @@ export default class {
       const postTam = await modal.loading(xhr.post('/uwu/work/item', data));
       if(postTam && postTam.code === 441) {
         await modal.alert(postTam.msg || 'Silakan login terlebih dahulu');
+        await this.destroy();
         this.isLocked = false;
         return new Akun().run()
       }
       if(!postTam || postTam.code !== 200) {
         await modal.alert(postTam?.msg || 'Terjadi Kesalahan');
+        await this.destroy();
         this.isLocked = false;
         return;
       }

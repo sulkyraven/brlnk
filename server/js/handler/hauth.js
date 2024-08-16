@@ -7,7 +7,7 @@ module.exports = {
   login(s) {
     if(typeof s?.email !== 'string') return {code:400,msg:'Masukkan alamat email kamu - CXG7001'};
     let mailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-    if(!s.email.match(mailRegex)) return {status:400, message: "Email yang kamu tulis gak valid"};
+    if(!s.email.match(mailRegex)) return {code:400, msg: "Email yang kamu tulis gak valid"};
 
     let ukey = Object.keys(db.ref.users).find(key => db.ref.users[key].email == s.email);
     if(!ukey) return {code:400,msg:`Akun dengan email\n${s.email}\ntidak ada dalam database kami`};
@@ -28,7 +28,7 @@ module.exports = {
   verify(s) {
     if(typeof s?.email !== 'string') return {code:400,msg:'Masukkan alamat email kamu - CXG7001'};
     let mailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-    if(!s.email.match(mailRegex)) return {status:400, message: "Email yang kamu tulis gak valid"};
+    if(!s.email.match(mailRegex)) return {code:400, msg: "Email yang kamu tulis gak valid"};
 
     if(typeof Number(s?.code) !== 'number' || s?.code?.toString().length !== 6) return {code:400,msg:'Masukkan kode OTP 6 Digit yang dikirimkan ke email - CXG7002'};
 
