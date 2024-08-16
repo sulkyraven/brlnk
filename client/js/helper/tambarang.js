@@ -20,7 +20,7 @@ export default class {
       </div>
       <div class="field">
         <label for="item_name">Nama Barang:</label>
-        <input type="text" name="item_name" id="item_name" autocomplete="off" maxlength="50" ${this.brg.name ? `value="${this.brg.name}"` : ''} required autofocus/>
+        <input type="text" name="item_name" id="item_name" autocomplete="off" maxlength="50" ${this.brg.name ? `value="${this.brg.name}"` : ''} required/>
       </div>
       <p>Tipe Barang:</p>
       <div class="tr-types">
@@ -104,6 +104,8 @@ export default class {
 
       if(delTam && delTam.code === 441) {
         await modal.alert(delTam.msg || 'Silakan login terlebih dahulu');
+        await this.destroy();
+        await elman?.classOpened?.destroy?.();
         this.isLocked = false;
         return new Akun().run()
       }
@@ -146,19 +148,19 @@ export default class {
       if(postTam && postTam.code === 441) {
         await modal.alert(postTam.msg || 'Silakan login terlebih dahulu');
         await this.destroy();
+        await elman?.classOpened?.destroy?.();
         this.isLocked = false;
         return new Akun().run()
       }
       if(!postTam || postTam.code !== 200) {
         await modal.alert(postTam?.msg || 'Terjadi Kesalahan');
-        await this.destroy();
         this.isLocked = false;
         return;
       }
+      
+      db.items[postTam.data.id] = postTam.data;
 
-      db.items[this.brg.id] = postTam.data;
-
-      if(['barang', 'rokok'].includes(elman.classOpened?.name)) elman.classOpened?.renderBarang(postTam.data);
+      if(['barang', 'rokok'].includes(elman.classOpened?.name)) elman.classOpened?.renderBarang?.(postTam.data);
       this.destroy();
     }
   }
@@ -172,6 +174,7 @@ export default class {
   run() {
     this.createElement();
     document.querySelector('body').append(this.element);
+    this.element.querySelector('#item_name').focus();
     this.submitListener();
     this.priceFormatter();
   }
