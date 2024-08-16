@@ -1,4 +1,6 @@
+import Akun from "../main/Akun.js";
 import db from "./db.js";
+import elman from "./elman.js";
 import { modal, waittime } from "./modal.js";
 import xhr from "./xhr.js";
 
@@ -18,7 +20,7 @@ export default class {
       </div>
       <div class="field">
         <label for="item_name">Nama Barang:</label>
-        <input type="text" name="item_name" id="item_name" autocomplete="off" maxlength="50" ${this.brg.name ? `value="${this.brg.name}"` : ''} required/>
+        <input type="text" name="item_name" id="item_name" autocomplete="off" maxlength="50" ${this.brg.name ? `value="${this.brg.name}"` : ''} required autofocus/>
       </div>
       <p>Tipe Barang:</p>
       <div class="tr-types">
@@ -57,13 +59,13 @@ export default class {
     </form>`;
     const echangelog = this.element.querySelector('[data-history]');
     if(echangelog) {
-      let changes = db.barang[this.brg.id].last || [];
+      let changes = db.items[this.brg.id].last || [];
       if(changes.length < 1) {
         echangelog.innerHTML = `<p>Belum ada perubahan</p>`;
       }
       changes.forEach(ch => {
         const p = document.createElement('p');
-        p.innerHTML = `${ch[0]}: Rp${ch[2].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} - ${new Date(ch[1]).toLocaleString()}`;
+        p.innerHTML = `${db.users.find(uk => uk.id === ch[0]).name}: Rp${ch[2].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} - ${new Date(ch[1]).toLocaleString()}`;
         echangelog.prepend(p);
       });
     }
@@ -98,12 +100,20 @@ export default class {
       let data = {};
       data.worktype = 2;
       if(this.brg.id) data.workid = this.brg.id;
-      const delTam = await modal.loading(xhr.post('/uwu/work/barang', data));
+      const delTam = await modal.loading(xhr.post('/uwu/work/item', data));
+
+      if(delTam && delTam.code === 441) {
+        await modal.alert(delTam.msg || 'Silakan login terlebih dahulu');
+        this.isLocked = false;
+        return new Akun().run()
+      }
       if(!delTam || delTam.code !== 200) {
         await modal.alert(delTam.msg || 'Terjadi Kesalahan');
         this.isLocked = false;
         return;
       }
+      document.querySelector(`#brg_${this.brg.id}`)?.remove();
+      await modal.alert(`Berhasil Menghapus ${this.brg.name}!`);
       this.isLocked = false;
       this.destroy();
     }
@@ -132,14 +142,21 @@ export default class {
         data[key] = val;
       }
 
-      const postTam = await modal.loading(xhr.post('/uwu/work/barang', data));
+      const postTam = await modal.loading(xhr.post('/uwu/work/item', data));
+      if(postTam && postTam.code === 441) {
+        await modal.alert(postTam.msg || 'Silakan login terlebih dahulu');
+        this.isLocked = false;
+        return new Akun().run()
+      }
       if(!postTam || postTam.code !== 200) {
         await modal.alert(postTam?.msg || 'Terjadi Kesalahan');
         this.isLocked = false;
         return;
       }
-      let textact = this.type === 0 ? 'menambah' : this.type === 1 ? 'mengubah' : 'menghapus';
-      await modal.alert(`Berhasil ${textact} data`);
+
+      db.items[this.brg.id] = postTam.data;
+
+      if(['barang', 'rokok'].includes(elman.classOpened?.name)) elman.classOpened?.renderBarang(postTam.data);
       this.destroy();
     }
   }

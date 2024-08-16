@@ -1,7 +1,7 @@
+import db from "../helper/db.js";
 import elman from "../helper/elman.js";
 import { waittime } from "../helper/modal.js";
 import nav from "./nav.js";
-const biaya = await fetch('./json/biaya.json').then(k=>k.json()).then(k=>k).catch(()=>{return{}});
 
 export default class Biaya {
   constructor() {
@@ -53,7 +53,7 @@ export default class Biaya {
     </div>`;
   }
   getFeePrint(input) {
-    let tfee = biaya[this.type].find(k => input.value >= k.tr);
+    let tfee = db.fees[this.type].find(k => input.value >= k.tr);
     const eamount = this.element.querySelector('[data-amount]');
     eamount.innerHTML = 'Rp'+(input.value || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");;
     const efee = this.element.querySelector('[data-fee]');

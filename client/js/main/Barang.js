@@ -27,8 +27,12 @@ export default class Barang {
     this.btnAdd = this.element.querySelector('.btn-add-item');
   }
   getBarangList() {
-    const rdb = Object.keys(db.barang).filter(key => this.tyfilter.includes(db.barang[key].type)).map(key => {
-      return { ...db.barang[key], id: key}
+    const rdb = Object.keys(db.items).filter(key => this.tyfilter.includes(db.items[key].type)).sort((a, b) => {
+      if(db.items[a].name < db.items[b].name) return 1;
+      if(db.items[a].name > db.items[b].name) return -1;
+      return 0;
+    }).map(key => {
+      return { ...db.items[key], id:key}
     });
     rdb.forEach(brg => this.renderBarang(brg));
   }
@@ -38,7 +42,7 @@ export default class Barang {
       item = document.createElement('div');
       item.classList.add('item');
       item.id = `brg_${brg.id}`;
-      this.elist.append(item);
+      this.elist.prepend(item);
     }
     item.innerHTML = `
     <div class="col col-1">
@@ -51,7 +55,7 @@ export default class Barang {
         </div>
       </div>
       <div class="row row-2">
-        <p>${brg.last ? brg.last[brg.last.length - 1][0] + ' - ' + new Date(brg.last[brg.last.length - 1][1]).toLocaleString() : ''}</p>
+        <p>${brg.last ? (db.users.find(uk => uk.id === brg.last[brg.last.length - 1][0]).name || '-') + ' - ' + new Date(brg.last[brg.last.length - 1][1]).toLocaleString() : ''}</p>
       </div>
     </div>
     <div class="col col-2">
@@ -102,10 +106,10 @@ export default class Barang {
       this.elist.innerHTML = '';
       nav.setTitle('PENCARIAN');
       if(elman?.classOpened?.name) elman.classOpened.name = 'barang';
-      Object.keys(db.barang).filter(key => {
-        return db.barang[key].name.toLowerCase().includes(input.value.toLowerCase());
+      Object.keys(db.items).filter(key => {
+        return db.items[key].name.toLowerCase().includes(input.value.toLowerCase());
       }).forEach(key => {
-        let brg = {...db.barang[key], id:key};
+        let brg = {...db.items[key], id:key};
         this.renderBarang(brg);
       });
     }

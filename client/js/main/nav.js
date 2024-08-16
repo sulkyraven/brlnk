@@ -1,4 +1,3 @@
-import db from "../helper/db.js";
 import elman from "../helper/elman.js";
 import { waittime } from "../helper/modal.js";
 import Barang from "./Barang.js";

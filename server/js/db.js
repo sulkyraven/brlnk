@@ -3,7 +3,7 @@ const fs = require('fs');
 let path = './server/db';
 class DevankaDataBase {
   constructor() {
-    this.ref = {users:{},barang:{},privs:{}}
+    this.ref = {users:{},items:{},fees:{}}
   }
   load() {
     Object.keys(this.ref).forEach(dbpath => {

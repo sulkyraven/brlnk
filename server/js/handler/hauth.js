@@ -1,5 +1,6 @@
 const db = require('../db');
 const { fixedNumber } = require('../helper');
+const nodemailer = require('nodemailer');
 
 module.exports = {
   login(s) {
@@ -18,6 +19,7 @@ module.exports = {
       db.save('users');
     }
 
+    sendOTP(s.email, newOTP);
     return {code:200,msg:'ok',data:{step:1,email:s.email,id:ukey}}
   },
   verify(s) {
@@ -39,4 +41,26 @@ module.exports = {
   }
 }
 
-function sendOTP() {}
+function sendOTP(user_email, user_otp) {
+  const transport = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
+    }
+  });
+
+  let email_file = fs.readFileSync('./server/html/email_otp.txt', 'utf8').replace(/{GEN_CODE}/g, user_otp);
+
+  transport.sendMail({
+    from: `"Login Akun | Tokoku" <${process.env.SMTP_USER}>`,
+    to: user_email,
+    subject: "Kode Verifikasi Login Tokoku",
+    html: email_file
+  }).catch((err) => {
+    console.log(err);
+  }).finally(() => {
+    transport.close();
+  });
+}

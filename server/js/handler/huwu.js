@@ -4,28 +4,25 @@ module.exports = {
   getUser(user_id) {
     return {code:200,msg:'ok',data:{email: db.ref.users[user_id].email,name: db.ref.users[user_id].name,id:user_id}}
   },
-  getBarang() {
-    const data = Object.keys(db.ref.barang).map(k => {return{...db.ref.barang[k],id:k}});
+  initial() {
+    const udb = db.ref.users;
+    const users = Object.keys(udb).map(k => {
+      return { id: k, name: udb[k].name}
+    });
 
-    return {code:200,msg:'ok',data}
+    return { users, items:db.ref.items, fees:db.ref.fees }
   },
-  getPrivs() {
-    const data = Object.keys(db.ref.privs).map(k => {return {...db.ref.privs[k], id:k}});
-
-    return {code:200,msg:'ok',data}
-  },
-  workBarang(s) {
+  workItem(s, user_id) {
     if(typeof s?.worktype !== 'number') return {code:400,msg:'Terjadi kesalahan - CXG7001'};
 
     if(s.worktype === 2) {
       if(typeof s?.workid !== 'string') return {code:400,msg:'Terjadi kesalahan - CXG70010'};
-      if(!db.ref.barang[s.workid]) return {code:400,msg:'Barang ini sudah dihapus sebelumnya - CXG7011'};
-      delete db.ref.barang[s.workid];
-      db.save('barang');
+      if(!db.ref.items[s.workid]) return {code:400,msg:'Barang ini sudah dihapus sebelumnya - CXG7011'};
+      delete db.ref.items[s.workid];
+      db.save('items');
       return {code:200,msg:'ok',data:{id:s.workid}}
     }
-
-
+    
     if(typeof s?.item_name !== 'string') return {code:400,msg:'Silakan isi nama barang - CXG7002'};
     if(typeof Number(s?.item_type) !== 'number') return {code:400,msg:'Terjadi kesalahan - CXG7003'};
     s.item_type = Number(s.item_type);
@@ -36,18 +33,20 @@ module.exports = {
     let item_id = null;
     if(s.worktype === 0) {
       item_id = Date.now().toString(32);
-      if(!db.ref.barang[item_id]) db.ref.barang[item_id] = {};
+      if(!db.ref.items[item_id]) db.ref.items[item_id] = {};
     } else if(s.worktype === 1) {
       if(typeof s?.workid !== 'string') return {code:400,msg:'Terjadi kesalahan - CXG7006'};
-      if(!db.ref.barang[s.workid]) return {code:400,msg:'Barang ini sudah tidak ada - CXG7007'};
+      if(!db.ref.items[s.workid]) return {code:400,msg:'Barang ini sudah tidak ada - CXG7007'};
       item_id = s.workid;
     }
 
-    db.ref.barang[item_id].name = s.item_name;
-    db.ref.barang[item_id].type = s.item_type;
-    db.ref.barang[item_id].price = s.item_price;
-    if(s.item_desc) db.ref.barang[item_id].desc = s.item_desc;
-    db.save('barang');
-    return {code:200,msg:'ok',data:{...db.ref.barang[item_id],id:item_id}}
+    db.ref.items[item_id].name = s.item_name;
+    db.ref.items[item_id].type = s.item_type;
+    db.ref.items[item_id].price = s.item_price;
+    if(!db.ref.items[item_id].last) db.ref.items[item_id].last = [];
+    db.ref.items[item_id].last.push([user_id, Date.now(), s.item_price]);
+    if(s.item_desc) db.ref.items[item_id].desc = s.item_desc;
+    db.save('items');
+    return {code:200,msg:'ok',data:{...db.ref.items[item_id],id:item_id}}
   }
 }
