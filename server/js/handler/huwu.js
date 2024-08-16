@@ -48,5 +48,23 @@ module.exports = {
     if(s.item_desc) db.ref.items[item_id].desc = s.item_desc;
     db.save('items');
     return {code:200,msg:'ok',data:{...db.ref.items[item_id],id:item_id}}
+  },
+  getAppUpdate(s) {
+    if(!s || typeof s?.version !== 'string' || typeof s?.build !== 'string') return {code:400,msg:'Error Reading App Build Number!'};
+
+    let lastApp = db.ref.apps[db.ref.apps.length - 1];
+
+    // let appdemo = {
+    //   id:"lalala",
+    //   version: "1.0.0",
+    //   build: "76.1.22",
+    //   link: 'https://tokoku.devanka.id/file/app/download/tokoku_v1.0.0.apk'
+    // }
+
+    if(s.version !== lastApp.version || s.build !== lastApp.build) {
+      return {code:200,msg:'Harap update app ini untuk mendapatkan fitur terbaru dan perbaikan error',data:{url:lastApp.link}};
+    }
+
+    return{code:400,msg:'Tidak ada update terbaru'};
   }
 }

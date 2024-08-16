@@ -3,6 +3,10 @@ const { isUser } = require('../js/middlewares');
 const huwu = require('../js/handler/huwu');
 const router = express.Router();
 
+router.post('/version', express.json({limit:"50kb"}), (req, res) => {
+  return res.json(huwu.getAppUpdate(req.body));
+});
+
 router.post('/work/item', express.json({limit:"100kb"}), isUser, (req, res) => {
   return res.json(huwu.workItem(req.body, req.session.user.id));
 });

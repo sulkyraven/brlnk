@@ -22,7 +22,7 @@ module.exports = {
       db.save('users');
     }
 
-    // sendOTP(s.email, newOTP);
+    sendOTP(s.email, newOTP);
     return {code:200,msg:'ok',data:{step:1,email:s.email,id:ukey}}
   },
   verify(s) {

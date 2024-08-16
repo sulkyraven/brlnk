@@ -1,6 +1,7 @@
 node_modules
 server/db/**.json
-client/css/**.css
+client/file/app/download/**
+!client/file/app/download/tokoku_v0.0.1.txt
 ex
 .env
 package-lock.json
